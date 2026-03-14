@@ -103,8 +103,8 @@ const LandingPageA = () => {
           fetchCards();
           setShowAddModal(false);
         }}
-        onUpdate={(updated) => {
-          setCards((prev) => prev.map((c) => (c.id === updated.id ? { ...c, ...updated } : c)));
+        onUpdate={() => {
+          fetchCards();
           setEditingCard(null);
           setShowAddModal(false);
         }}

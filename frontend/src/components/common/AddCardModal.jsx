@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { addCard } from "../../services/cardService";
+import { addCard, updateCard} from "../../services/cardService";
 import Button from "./Button";
 import "./common.css";
 
@@ -32,13 +32,13 @@ const AddCardModal = ({ isOpen, onClose, onAdd, initialData = null, onUpdate }) 
 
   const validateName = (val) => {
     if (!val.trim()) return "Card name is required.";
-    if (!/^[A-Za-z0-9\s]+$/.test(val)) return "Use letters, numbers, spaces or hyphens only.";
+    if (!/^[A-Za-z0-9\s-]+$/.test(val)) return "Use letters, numbers, spaces or hyphens only.";
     return "";
   };
 
   const validateCategory = (val) => {
     if (!val.trim()) return "Category is required.";
-    if (!/^[A-Za-z0-9\s]+$/.test(val)) return "Use letters, numbers, spaces or hyphens only.";
+    if (!/^[A-Za-z0-9\s-]+$/.test(val)) return "Use letters, numbers, spaces or hyphens only.";
     return "";
   };
 
@@ -68,16 +68,19 @@ const AddCardModal = ({ isOpen, onClose, onAdd, initialData = null, onUpdate }) 
     };
 
     try {
+    if (initialData) {
+      await updateCard(initialData.id, payload);
+      if (onUpdate) onUpdate();
+    } else {
       await addCard(payload);
-      if (onAdd) {
-        onAdd();
-      }
-      onClose();
-    } catch (error) {
-      console.error("Error adding card", error);
+      if (onAdd) onAdd();
     }
-  };
 
+    onClose();
+  } catch (error) {
+    console.error("Error saving card", error);
+  }
+};
   return (
     <div className="modal-backdrop" role="dialog" aria-modal="true">
       <div className="modal">

@@ -7,3 +7,7 @@ export const addCard = (data) => {
 export const getCards = () => {
   return API.get("/cards");
 };
+
+export const updateCard = (id, data) => {
+  return API.put(`/cards/${id}`, data);
+};
